@@ -24,11 +24,14 @@
 <title><?php echo $title_for_layout; ?></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,800italic,400,700,800' rel='stylesheet' type='text/css'>
-<?php echo $this->Html->css(array('bootstrap.min.css', 'css.css')); ?>
-<lin1k rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+
+<?php echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'css.css')); ?>
+<link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/smoothness/jquery-ui.css" />
+<?php echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'css.css')); ?>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
-<?php echo $this->Html->script(array('bootstrap.min.js', 'js.js')); ?>
+<?php echo $this->Html->script(array('bootstrap.min.js')); ?>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js"></script>
+<?php echo $this->Html->script(array('js.js')); ?>
 <?php echo $this->App->js(); ?>
 <?php echo $this->fetch('meta'); ?>
 <?php echo $this->fetch('css'); ?>
@@ -74,9 +77,10 @@ $(document).ready(function(){
 					<li><?php echo $this->Html->link('Search', array('controller' => 'products', 'action' => 'search')); ?></li>
 				</ul>
 				<ul class="navbar-form form-inline navbar-right">
+
 					<?php echo $this->Form->create('Product', array('type' => 'GET', 'url' => array('controller' => 'products', 'action' => 'search'))); ?>
 
-					<?php echo $this->Form->input('search', array('label' => false, 'div' => false, 'class' => 'input-sm', 'autocomplete' => 'off')); ?>
+					<?php echo $this->Form->input('search', array('label' => false, 'div' => false, 'id' => 's', 'class' => 'input-sm s', 'autocomplete' => 'off')); ?>
 					<?php echo $this->Form->button('Search', array('div' => false, 'class' => 'btn btn-sm btn-primary')); ?>
 					&nbsp;
 					<span id="cartbutton" style="display:none;">

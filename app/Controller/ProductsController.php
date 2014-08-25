@@ -153,13 +153,13 @@ class ProductsController extends AppController {
 
 	public function searchjson() {
 
-		$search = null;
-		if(!empty($this->request->query['search'])) {
-			$search = $this->request->query['search'];
-			$terms = explode(' ', trim($search));
+		$term = null;
+		if(!empty($this->request->query['term'])) {
+			$term = $this->request->query['term'];
+			$terms = explode(' ', trim($term));
 			$terms = array_diff($terms, array(''));
 			$conditions = array(
-				'Brand.active' => 1,
+				// 'Brand.active' => 1,
 				'Product.active' => 1
 			);
 			foreach($terms as $term) {
@@ -168,16 +168,18 @@ class ProductsController extends AppController {
 			$products = $this->Product->find('all', array(
 				'recursive' => -1,
 				'contain' => array(
-					'Brand'
+					// 'Brand'
 				),
 				'fields' => array(
+					'Product.id',
 					'Product.name',
 					'Product.image'
 				),
 				'conditions' => $conditions,
-				'limit' => 200,
+				'limit' => 20,
 			));
 		}
+		// $products = Hash::extract($products, '{n}.Product.name');
 		echo json_encode($products);
 		$this->autoRender = false;
 
