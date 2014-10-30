@@ -757,7 +757,7 @@ class Model extends Object implements CakeEventListener {
 
 /**
  * Returns a list of all events that will fire in the model during it's lifecycle.
- * You can override this function to add you own listener callbacks
+ * You can override this function to add your own listener callbacks
  *
  * @return array
  */
@@ -1199,6 +1199,10 @@ class Model extends Object implements CakeEventListener {
 		foreach ($data as $modelName => $fieldSet) {
 			if (!is_array($fieldSet)) {
 				continue;
+			}
+
+			if (!isset($this->data[$modelName])) {
+				$this->data[$modelName] = array();
 			}
 
 			foreach ($fieldSet as $fieldName => $fieldValue) {
@@ -2090,7 +2094,7 @@ class Model extends Object implements CakeEventListener {
 
 				if (isset($keys['old'][$foreignKey]) && $keys['old'][$foreignKey] != $keys[$foreignKey]) {
 					$conditions[$fkQuoted] = $keys['old'][$foreignKey];
-					$count = intval($this->find('count', compact('conditions', 'recursive')));
+					$count = (int)$this->find('count', compact('conditions', 'recursive'));
 
 					$Model->updateAll(
 						array($field => $count),
@@ -2104,7 +2108,7 @@ class Model extends Object implements CakeEventListener {
 					$conditions = array_merge($conditions, (array)$conditions);
 				}
 
-				$count = intval($this->find('count', compact('conditions', 'recursive')));
+				$count = (int)$this->find('count', compact('conditions', 'recursive'));
 
 				$Model->updateAll(
 					array($field => $count),
@@ -2975,7 +2979,7 @@ class Model extends Object implements CakeEventListener {
 			$query = $this->{'_find' . ucfirst($type)}('before', $query);
 		}
 
-		if (!is_numeric($query['page']) || intval($query['page']) < 1) {
+		if (!is_numeric($query['page']) || (int)$query['page'] < 1) {
 			$query['page'] = 1;
 		}
 
@@ -3088,7 +3092,7 @@ class Model extends Object implements CakeEventListener {
 					return count($results);
 				}
 
-				return intval($results[0][$key]['count']);
+				return (int)$results[0][$key]['count'];
 			}
 		}
 
@@ -3289,11 +3293,26 @@ class Model extends Object implements CakeEventListener {
 /**
  * Returns false if any fields passed match any (by default, all if $or = false) of their matching values.
  *
+ * Can be used as a validation method. When used as a validation method, the `$or` parameter
+ * contains an array of fields to be validated.
+ *
  * @param array $fields Field/value pairs to search (if no values specified, they are pulled from $this->data)
- * @param bool $or If false, all fields specified must match in order for a false return value
+ * @param bool|array $or If false, all fields specified must match in order for a false return value
  * @return bool False if any records matching any fields are found
  */
 	public function isUnique($fields, $or = true) {
+		if (is_array($or)) {
+			$isRule = (
+				array_key_exists('rule', $or) &&
+				array_key_exists('required', $or) &&
+				array_key_exists('message', $or)
+			);
+			if (!$isRule) {
+				$args = func_get_args();
+				$fields = $args[1];
+				$or = isset($args[2]) ? $args[2] : true;
+			}
+		}
 		if (!is_array($fields)) {
 			$fields = func_get_args();
 			if (is_bool($fields[count($fields) - 1])) {
