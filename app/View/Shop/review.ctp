@@ -2,18 +2,7 @@
 
 <?php $this->Html->addCrumb('Order Review'); ?>
 
-<?php echo $this->Html->script(array('shop_review.js'), array('inline' => false)); ?>
-
-<style type="text/css">
-    #ccbox {
-        background: transparent url("<?php echo $this->webroot; ?>img/cards.png");
-        margin: 0 0 10px 0;
-        padding: 0 0 0 150px;
-        width: 0;
-        height: 23px;
-        overflow: hidden;
-    }
-</style>
+<?php echo $this->Html->script(array('jquery.validate.js', 'additional-methods.js', 'shop_review.js'), array('inline' => false)); ?>
 
 <h1>Order Review</h1>
 
@@ -115,12 +104,8 @@
 
 <?php if((Configure::read('Settings.AUTHORIZENET_ENABLED') == 1) && $shop['Order']['order_type'] == 'creditcard') : ?>
 
-<div id="ccbox">
-    Credit Card Type.
-</div>
-
 <div class="row">
-    <div class="col col-sm-3">
+    <div class="col col-sm-4">
         <?php echo $this->Form->input('creditcard_number', array('class' => 'form-control ccinput', 'maxLength' => 16, 'autocomplete' => 'off')); ?>
     </div>
 </div>
