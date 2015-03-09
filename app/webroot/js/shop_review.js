@@ -43,6 +43,12 @@ $(document).ready(function(){
         }
     });
 
+    $("#cscpop").popover({
+        container: 'body',
+        html: true,
+        trigger: 'hover'
+    });
+
 });
 
 

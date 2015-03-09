@@ -106,14 +106,31 @@
 
 <div class="row">
     <div class="col col-sm-4">
-        <?php echo $this->Form->input('creditcard_number', array('class' => 'form-control ccinput', 'maxLength' => 16, 'autocomplete' => 'off')); ?>
+
+        <strong>Credit or debit card</strong>
+
+        <br />
+
+        <?php echo $this->Form->input('creditcard_number', array('label' => false, 'class' => 'form-control ccinput', 'type' => 'tel', 'maxLength' => 16, 'autocomplete' => 'off')); ?>
+
+    </div>
+    <div class="col col-sm-2">
+
+        <strong>Card Security Code</strong>
+
+        <a tabindex="9999" id="cscpop" role="button" data-placement="top" data-toggle="popover" data-trigger="focus" title="Card Security Code (CSC)" data-content="<small><strong>Visa, MasterCard, Discover</strong><br /><img src=<?php echo Router::url('/'); ?>img/visa.png><br / >The security code is the last three digits of the number that appears on the back of your card in the signature bar. <br /><br /><strong>American Express</strong><br /><img src=<?php echo Router::url('/'); ?>img/amex.png><br />The security code is the four digits located on the front of the card, on the right side.</small>"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></a>
+
+        <br />
+
+        <?php echo $this->Form->input('creditcard_code', array('label' => false, 'class' => 'form-control', 'type' => 'tel', 'maxLength' => 4)); ?>
+
     </div>
 </div>
 
 <br />
 
 <div class="row">
-    <div class="col col-sm-2">
+    <div class="col col-sm-3">
         <?php echo $this->Form->input('creditcard_month', array(
             'label' => 'Expiration Month',
             'class' => 'form-control',
@@ -133,7 +150,7 @@
             )
         )); ?>
     </div>
-    <div class="col col-sm-2">
+    <div class="col col-sm-3">
         <?php echo $this->Form->input('creditcard_year', array(
             'label' => 'Expiration Year',
             'class' => 'form-control',
@@ -143,13 +160,6 @@
 </div>
 
 <br />
-
-<div class="row">
-    <div class="col col-sm-2">
-        <?php echo $this->Form->input('creditcard_code', array('label' => 'Card Security Code', 'class' => 'form-control', 'maxLength' => 4)); ?>
-    </div>
-</div>
-
 <br />
 
 <?php endif; ?>
