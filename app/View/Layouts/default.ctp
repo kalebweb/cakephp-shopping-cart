@@ -28,7 +28,7 @@
     <?php echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'css.css')); ?>
     <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
     <?php echo $this->Html->css(array('bootstrap.min.css', 'bootstrap-theme.min.css', 'css.css')); ?>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <?php echo $this->Html->script(array('bootstrap.min.js')); ?>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
     <?php echo $this->Html->script(array('js.js')); ?>
