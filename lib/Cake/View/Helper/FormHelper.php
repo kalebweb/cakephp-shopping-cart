@@ -408,7 +408,7 @@ class FormHelper extends AppHelper {
 				'action' => $options['action'],
 			);
 			$options['action'] = array_merge($actionDefaults, (array)$options['url']);
-			if (empty($options['action'][0]) && !empty($id)) {
+			if (!isset($options['action'][0]) && !empty($id)) {
 				$options['action'][0] = $id;
 			}
 		} elseif (is_string($options['url'])) {
@@ -1287,12 +1287,13 @@ class FormHelper extends AppHelper {
 			isset($fieldDef['length']) &&
 			is_scalar($fieldDef['length']) &&
 			$fieldDef['length'] < 1000000 &&
+			$fieldDef['type'] !== 'decimal' &&
 			$options['type'] !== 'select'
 		);
 		if ($autoLength &&
 			in_array($options['type'], array('text', 'textarea', 'email', 'tel', 'url', 'search'))
 		) {
-			$options['maxlength'] = $fieldDef['length'];
+			$options['maxlength'] = (int)$fieldDef['length'];
 		}
 		return $options;
 	}

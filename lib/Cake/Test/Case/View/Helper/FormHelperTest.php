@@ -764,6 +764,31 @@ class FormHelperTest extends CakeTestCase {
 	}
 
 /**
+ * Tests correct generation of decimal fields as text inputs
+ *
+ * @return void
+ */
+	public function testTextFieldGenerationForDecimalAsText() {
+		$this->Form->create('ValidateUser');
+		$result = $this->Form->input('cost_decimal', array(
+			'type' => 'text'
+		));
+		$expected = array(
+			'div' => array('class' => 'input text'),
+			'label' => array('for' => 'ValidateUserCostDecimal'),
+			'Cost Decimal',
+			'/label',
+			array('input' => array(
+				'type' => 'text',
+				'name' => 'data[ValidateUser][cost_decimal]',
+				'id' => 'ValidateUserCostDecimal',
+			)),
+			'/div'
+		);
+		$this->assertTags($result, $expected);
+	}
+
+/**
  * Tests correct generation of number fields for integer fields
  *
  * @return void
@@ -8617,6 +8642,7 @@ class FormHelperTest extends CakeTestCase {
 			'escape' => false,
 			'url' => array(
 				'action' => 'edit',
+				'0',
 				'myparam'
 			)
 		));
@@ -8624,7 +8650,7 @@ class FormHelperTest extends CakeTestCase {
 			'form' => array(
 				'id' => 'ContactAddForm',
 				'method' => 'post',
-				'action' => '/contacts/edit/myparam',
+				'action' => '/contacts/edit/0/myparam',
 				'accept-charset' => $encoding
 			),
 			'div' => array('style' => 'display:none;'),
@@ -8642,8 +8668,8 @@ class FormHelperTest extends CakeTestCase {
 	public function testCreateNoErrorsWithMockModel() {
 		$encoding = strtolower(Configure::read('App.encoding'));
 		$ContactMock = $this->getMockBuilder('Contact')
-				->disableOriginalConstructor()
-				->getMock();
+			->disableOriginalConstructor()
+			->getMock();
 		ClassRegistry::removeObject('Contact');
 		ClassRegistry::addObject('Contact', $ContactMock);
 		$result = $this->Form->create('Contact', array('type' => 'GET'));
