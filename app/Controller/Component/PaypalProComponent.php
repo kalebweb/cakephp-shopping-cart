@@ -49,10 +49,6 @@ class PaypalProComponent extends Component {
         $this->paypal_password = Configure::read('Settings.PAYPAL_PASSWORD');
         $this->paypal_signature = Configure::read('Settings.PAYPAL_SIGNATURE');
 
-        $this->paypal_username = Configure::read('Settings.PAYPAL_USERNAME');
-        $this->paypal_password = Configure::read('Settings.PAYPAL_PASSWORD');
-        $this->paypal_signature = Configure::read('Settings.PAYPAL_SIGNATURE');
-
         if(Configure::read('Settings.PAYPAL_MODE') == 'test') {
             $this->paypal_endpoint = $this->paypal_endpoint_test;
         }
