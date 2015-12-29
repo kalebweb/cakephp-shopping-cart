@@ -258,7 +258,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 		$Dispatch->parseParams(new CakeEvent('ControllerTestCase', $Dispatch, array('request' => $request)));
 		if (!isset($request->params['controller']) && Router::currentRoute()) {
 			$this->headers = Router::currentRoute()->response->header();
-			return;
+			return null;
 		}
 		if ($this->_dirtyController) {
 			$this->controller = null;
@@ -275,7 +275,7 @@ abstract class ControllerTestCase extends CakeTestCase {
 			$params['requested'] = 1;
 		}
 		$Dispatch->testController = $this->controller;
-		$Dispatch->response = $this->getMock('CakeResponse', array('send'));
+		$Dispatch->response = $this->getMock('CakeResponse', array('send', '_clearBuffer'));
 		$this->result = $Dispatch->dispatch($request, $Dispatch->response, $params);
 		$this->controller = $Dispatch->testController;
 		$this->vars = $this->controller->viewVars;

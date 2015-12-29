@@ -295,6 +295,8 @@ class CakeRequest implements ArrayAccess {
 
 		if (!$baseUrl) {
 			$base = dirname(env('PHP_SELF'));
+			// Clean up additional / which cause following code to fail..
+			$base = preg_replace('#/+#', '/', $base);
 
 			$indexPos = strpos($base, '/webroot/index.php');
 			if ($indexPos !== false) {
@@ -731,7 +733,7 @@ class CakeRequest implements ArrayAccess {
  */
 	public static function header($name) {
 		$name = 'HTTP_' . strtoupper(str_replace('-', '_', $name));
-		if (!empty($_SERVER[$name])) {
+		if (isset($_SERVER[$name])) {
 			return $_SERVER[$name];
 		}
 		return false;
@@ -851,7 +853,7 @@ class CakeRequest implements ArrayAccess {
  * @return mixed If a $language is provided, a boolean. Otherwise the array of accepted languages.
  */
 	public static function acceptLanguage($language = null) {
-		$raw = self::_parseAcceptWithQualifier(self::header('Accept-Language'));
+		$raw = static::_parseAcceptWithQualifier(static::header('Accept-Language'));
 		$accept = array();
 		foreach ($raw as $languages) {
 			foreach ($languages as &$lang) {

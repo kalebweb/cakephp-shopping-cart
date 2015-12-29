@@ -6309,9 +6309,7 @@ class ModelReadTest extends BaseModelTest {
 			'joins' => array(),
 			'limit' => null,
 			'offset' => null,
-			'order' => array(
-				0 => null
-			),
+			'order' => array(),
 			'page' => 1,
 			'group' => null,
 			'callbacks' => true,
@@ -7043,7 +7041,7 @@ class ModelReadTest extends BaseModelTest {
  * @return void
  */
 	public function testFindMagic() {
-		$this->loadFixtures('User');
+		$this->loadFixtures('User', 'Comment', 'Article');
 		$TestModel = new User();
 
 		$result = $TestModel->findByUser('mariano');
@@ -7066,6 +7064,113 @@ class ModelReadTest extends BaseModelTest {
 			'updated' => '2007-03-17 01:18:31'
 		));
 		$this->assertEquals($expected, $result);
+
+		$Comment = new Comment();
+		$Comment->recursive = -1;
+		$results = $Comment->findAllByUserId(1);
+		$expected = array(
+			array(
+				'Comment' => array(
+					'id' => 3,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Third Comment for First Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:49:23',
+					'updated' => '2007-03-18 10:51:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 4,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Fourth Comment for First Article',
+					'published' => 'N',
+					'created' => '2007-03-18 10:51:23',
+					'updated' => '2007-03-18 10:53:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 5,
+					'article_id' => 2,
+					'user_id' => 1,
+					'comment' => 'First Comment for Second Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:53:23',
+					'updated' => '2007-03-18 10:55:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Comment->findAllByUserIdAndPublished(1, 'Y');
+		$expected = array(
+			array(
+				'Comment' => array(
+					'id' => 3,
+					'article_id' => 1,
+					'user_id' => 1,
+					'comment' => 'Third Comment for First Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:49:23',
+					'updated' => '2007-03-18 10:51:31'
+				)
+			),
+			array(
+				'Comment' => array(
+					'id' => 5,
+					'article_id' => 2,
+					'user_id' => 1,
+					'comment' => 'First Comment for Second Article',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:53:23',
+					'updated' => '2007-03-18 10:55:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$Article = new CustomArticle();
+		$Article->recursive = -1;
+		$results = $Article->findListByUserId(1);
+		$expected = array(
+			1 => 'First Article',
+			3 => 'Third Article'
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Article->findPublishedByUserId(1);
+		$expected = array(
+			array(
+				'CustomArticle' => array(
+					'id' => 1,
+					'user_id' => 1,
+					'title' => 'First Article',
+					'body' => 'First Article Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:39:23',
+					'updated' => '2007-03-18 10:41:31'
+				)
+			),
+			array(
+				'CustomArticle' => array(
+					'id' => 3,
+					'user_id' => 1,
+					'title' => 'Third Article',
+					'body' => 'Third Article Body',
+					'published' => 'Y',
+					'created' => '2007-03-18 10:43:23',
+					'updated' => '2007-03-18 10:45:31'
+				)
+			)
+		);
+		$this->assertEquals($expected, $results);
+
+		$results = $Article->findUnPublishedByUserId(1);
+		$expected = array();
+		$this->assertEquals($expected, $results);
 	}
 
 /**
@@ -7837,6 +7942,38 @@ class ModelReadTest extends BaseModelTest {
 	}
 
 /**
+ * Test virtualfields that contain subqueries get correctly
+ * quoted allowing reserved words to be used.
+ *
+ * @return void
+ */
+	public function testVirtualFieldSubqueryReservedWords() {
+		$this->loadFixtures('User');
+		$user = ClassRegistry::init('User');
+		$user->cacheMethods = false;
+		$ds = $user->getDataSource();
+
+		$sub = $ds->buildStatement(
+			array(
+				'fields' => array('Table.user'),
+				'table' => $ds->fullTableName($user),
+				'alias' => 'Table',
+				'limit' => 1,
+				'conditions' => array(
+					"Table.id > 1"
+				)
+			),
+			$user
+		);
+		$user->virtualFields = array(
+			'sub_test' => $sub
+		);
+
+		$result = $user->find('first');
+		$this->assertNotEmpty($result);
+	}
+
+/**
  * testVirtualFieldsOrder()
  *
  * Test correct order on virtual fields
@@ -8047,8 +8184,8 @@ class ModelReadTest extends BaseModelTest {
 
 /**
  * test after find callback on related model
- * 
- * @return void 
+ *
+ * @return void
  */
 	public function testRelatedAfterFindCallback() {
 		$this->loadFixtures('Something', 'SomethingElse', 'JoinThing');
