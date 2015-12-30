@@ -45,8 +45,8 @@ class PaypalComponent extends Component {
 
 ////////////////////////////////////////////////////////////
 
-    public function step1($paymentAmount = 0) {
-        $resArray = $this->CallShortcutExpressCheckout($paymentAmount);
+    public function step1($shop) {
+        $resArray = $this->CallShortcutExpressCheckout($shop);
         $ack = strtoupper($resArray['ACK']);
         if($ack=='SUCCESS' || $ack=='SUCCESSWITHWARNING') {
             return $this->controller->redirect($this->PAYPAL_URL . $resArray['TOKEN']);
@@ -55,12 +55,22 @@ class PaypalComponent extends Component {
 
 ////////////////////////////////////////////////////////////
 
-    public function CallShortcutExpressCheckout($paymentAmount) {
-        $nvpstr = '&PAYMENTREQUEST_0_AMT='. $paymentAmount;
+    public function CallShortcutExpressCheckout($shop) {
+
+        $nvpstr = '&PAYMENTREQUEST_0_AMT='. $shop['Order']['total'];
         $nvpstr .= '&PAYMENTREQUEST_0_PAYMENTACTION=' . $this->paymentType;
         $nvpstr .= '&RETURNURL=' . $this->returnURL;
         $nvpstr .= '&CANCELURL=' . $this->cancelURL;
         $nvpstr .= '&PAYMENTREQUEST_0_CURRENCYCODE=' . $this->currencyCodeType;
+
+        $item = 1;
+        foreach ($shop['OrderItem'] as $key => $value) {
+            $nvpstr .= '&L_PAYMENTREQUEST_0_NAME' . $item . '='. urlencode($value['name']).'';
+            $nvpstr .= '&L_PAYMENTREQUEST_0_AMT' . $item . '='.$value['price'].'';
+            $nvpstr .= '&L_PAYMENTREQUEST_0_QTY' . $item . '='.$value['quantity'].'';
+            $item++;
+        }
+
         $this->Session->write('Shop.Paypal.currencyCodeType', $this->currencyCodeType);
         $this->Session->write('Shop.Paypal.PaymentType', $this->paymentType);
         $resArray = $this->hash_call('SetExpressCheckout', $nvpstr);

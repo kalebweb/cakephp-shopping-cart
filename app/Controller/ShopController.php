@@ -144,12 +144,12 @@ class ShopController extends AppController {
 //////////////////////////////////////////////////
 
     public function step1() {
-        $paymentAmount = $this->Session->read('Shop.Order.total');
-        if(!$paymentAmount) {
+        $shop = $this->Session->read('Shop');
+        if(!$shop) {
             return $this->redirect('/');
         }
         $this->Session->write('Shop.Order.order_type', 'paypal');
-        $this->Paypal->step1($paymentAmount);
+        $this->Paypal->step1($shop);
     }
 
 //////////////////////////////////////////////////
