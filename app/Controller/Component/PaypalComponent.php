@@ -63,7 +63,7 @@ class PaypalComponent extends Component {
         $nvpstr .= '&CANCELURL=' . $this->cancelURL;
         $nvpstr .= '&PAYMENTREQUEST_0_CURRENCYCODE=' . $this->currencyCodeType;
 
-        $item = 1;
+        $item = 0;
         foreach ($shop['OrderItem'] as $key => $value) {
             $nvpstr .= '&L_PAYMENTREQUEST_0_NAME' . $item . '='. urlencode($value['name']).'';
             $nvpstr .= '&L_PAYMENTREQUEST_0_AMT' . $item . '='.$value['price'].'';
