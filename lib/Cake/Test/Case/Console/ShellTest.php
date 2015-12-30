@@ -21,7 +21,6 @@
 App::uses('ShellDispatcher', 'Console');
 App::uses('Shell', 'Console');
 App::uses('Folder', 'Utility');
-App::uses("ProgressHelper", "Console/Helper");
 
 /**
  * ShellTestShell class
@@ -976,23 +975,4 @@ TEXT;
 		$this->Shell->runCommand('foo', array('--quiet'));
 	}
 
-/**
- * Test getting an instance of a helper
- *
- * @return void
- */
-	public function testGetInstanceOfHelper() {
-		$actual = $this->Shell->helper("progress");
-		$this->assertInstanceOf("ProgressShellHelper", $actual);
-	}
-
-/**
- * Test getting an invalid helper
- *
- * @expectedException RunTimeException
- * @return void
- */
-	public function testGetInvalidHelper() {
-		$this->Shell->helper("tomato");
-	}
 }

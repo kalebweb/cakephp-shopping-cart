@@ -450,17 +450,11 @@ class ConfigureTest extends CakeTestCase {
  * test reader() throwing exceptions on missing interface.
  *
  * @expectedException PHPUnit_Framework_Error
- * @throws PHPUnit_Framework_Error
  * @return void
  */
 	public function testReaderExceptionOnIncorrectClass() {
 		$reader = new StdClass();
-
-		try {
-			Configure::config('test', $reader);
-		} catch (Throwable $t) {
-			throw new PHPUnit_Framework_Error($t);
-		}
+		Configure::config('test', $reader);
 	}
 
 /**

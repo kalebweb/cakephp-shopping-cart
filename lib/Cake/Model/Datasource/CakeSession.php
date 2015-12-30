@@ -143,7 +143,7 @@ class CakeSession {
 	public static function init($base = null) {
 		static::$time = time();
 
-		if (env('HTTP_USER_AGENT') && !static::$_userAgent) {
+		if (env('HTTP_USER_AGENT')) {
 			static::$_userAgent = md5(env('HTTP_USER_AGENT') . Configure::read('Security.salt'));
 		}
 
@@ -202,6 +202,7 @@ class CakeSession {
 
 		$id = static::id();
 		static::_startSession();
+
 		if (!$id && static::started()) {
 			static::_checkValid();
 		}
@@ -217,9 +218,6 @@ class CakeSession {
  * @return bool True if session has been started.
  */
 	public static function started() {
-		if (function_exists('session_status')) {
-			return isset($_SESSION) && (session_status() === PHP_SESSION_ACTIVE);
-		}
 		return isset($_SESSION) && session_id();
 	}
 
@@ -463,12 +461,7 @@ class CakeSession {
 		}
 
 		if (static::started()) {
-			if (session_id() && static::_hasSession()) {
-				session_write_close();
-				session_start();
-			}
 			session_destroy();
-			unset($_COOKIE[static::_cookieName()]);
 		}
 
 		$_SESSION = null;
@@ -591,7 +584,7 @@ class CakeSession {
  * @return bool
  */
 	protected static function _hasSession() {
-		return static::started() || isset($_COOKIE[session_name()]) || (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg');
+		return static::started() || isset($_COOKIE[static::_cookieName()]);
 	}
 
 /**
@@ -760,11 +753,7 @@ class CakeSession {
 		if (isset($_COOKIE[session_name()])) {
 			setcookie(Configure::read('Session.cookie'), '', time() - 42000, static::$path);
 		}
-		if (!headers_sent()) {
-			session_write_close();
-			session_start();
-			session_regenerate_id(true);
-		}
+		session_regenerate_id(true);
 	}
 
 /**
