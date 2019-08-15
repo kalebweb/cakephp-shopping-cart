@@ -2,8 +2,6 @@
 
 <?php $this->Html->addCrumb('Brands'); ?>
 
-<br />
-
 <table class="table-striped table-bordered table-condensed table-hover">
     <tr>
         <th>Name</th>
@@ -14,6 +12,3 @@
     </tr>
     <?php endforeach; ?>
 </table>
-
-<br />
-<br />
